@@ -1,0 +1,142 @@
+COLAB-ИНСТРУКЦИЯ
+================
+
+Загружает все фото из products-all.xlsx в Cloudinary в одну папку mebrid/.
+Структура в Cloudinary: mebrid/<ID_товара>/01.jpg, 02.jpg, ...
+
+
+═══ ПОДГОТОВКА ═══════════════════════════════════════════════════
+
+1. Откройте https://colab.research.google.com → New notebook
+2. Слева панель файлов (📁) → Upload → выберите products-all.xlsx
+3. Скопируйте ячейки ниже, запустите по очереди
+
+
+─── ЯЧЕЙКА 1 ─────────────────────────────────────────────────────
+
+!pip install -q cloudinary pandas openpyxl tqdm
+
+import cloudinary
+import cloudinary.uploader
+from cloudinary.exceptions import Error as CloudinaryError
+import pandas as pd
+import re
+from tqdm.auto import tqdm
+
+# === Cloudinary ===
+CLOUDINARY_CLOUD_NAME = 'decrolfpj'
+CLOUDINARY_API_KEY    = '575925811733615'
+CLOUDINARY_API_SECRET = 'tMbrr0GARLABHjlWeX_bQmwHd0Q'
+
+# === Файл ===
+INPUT_FILE = 'products-all.xlsx'
+ROOT_FOLDER = 'mebrid'   # все фото идут сюда: mebrid/<id>/<01>
+MAX_PHOTOS_PER_PRODUCT = 10
+
+cloudinary.config(
+    cloud_name = CLOUDINARY_CLOUD_NAME,
+    api_key    = CLOUDINARY_API_KEY,
+    api_secret = CLOUDINARY_API_SECRET,
+    secure     = True,
+)
+
+print(f'✓ Cloud:  {CLOUDINARY_CLOUD_NAME}')
+print(f'✓ Файл:   {INPUT_FILE}')
+print(f'✓ Папка:  {ROOT_FOLDER}/<id>/<номер>')
+
+
+─── ЯЧЕЙКА 2 ─────────────────────────────────────────────────────
+
+def clean_photos(raw):
+    """Разбирает колонку 'Фото' на список URL, убирает thumbnail-дубли."""
+    if not isinstance(raw, str):
+        return []
+    urls = [u.strip() for u in raw.split('\n') if u.strip()]
+    full, thumbs = set(), {}
+    for u in urls:
+        base = re.sub(r'-\d+x\d+(?=\.(jpe?g|png|webp))', '', u, flags=re.I)
+        base = re.sub(r'_thumbnail_\d+(?=\.(jpe?g|png|webp))', '', base, flags=re.I)
+        if base == u:
+            full.add(u)
+        else:
+            thumbs.setdefault(base, u)
+    result = list(full)
+    for base, thumb in thumbs.items():
+        if base not in full:
+            result.append(thumb)
+    return result[:MAX_PHOTOS_PER_PRODUCT]
+
+
+df = pd.read_excel(INPUT_FILE)
+print(f'Прочитано {len(df)} товаров\n')
+
+new_column = []
+stats = {'uploaded': 0, 'existed': 0, 'errors': 0}
+
+for idx, row in tqdm(df.iterrows(), total=len(df), desc='Товары'):
+    product_id = row['ID']
+
+    photos = clean_photos(row['Фото'])
+    if not photos:
+        new_column.append('')
+        continue
+
+    uploaded = []
+    for i, url in enumerate(photos, 1):
+        public_id = f'{ROOT_FOLDER}/{product_id}/{i:02d}'
+        try:
+            result = cloudinary.uploader.upload(
+                url,
+                public_id = public_id,
+                overwrite = False,
+                resource_type = 'image',
+                unique_filename = False,
+                use_filename = False,
+            )
+            uploaded.append(result['secure_url'])
+            stats['uploaded'] += 1
+        except CloudinaryError as e:
+            msg = str(e)
+            if 'already exists' in msg.lower():
+                uploaded.append(
+                    f'https://res.cloudinary.com/{CLOUDINARY_CLOUD_NAME}/image/upload/{public_id}'
+                )
+                stats['existed'] += 1
+            else:
+                print(f'⚠ [{product_id}] {url[:60]}... → {msg[:100]}')
+                stats['errors'] += 1
+        except Exception as e:
+            print(f'⚠ [{product_id}] {url[:60]}... → {type(e).__name__}: {str(e)[:100]}')
+            stats['errors'] += 1
+
+    new_column.append('\n'.join(uploaded))
+
+df['Фото'] = new_column
+OUTPUT_FILE = INPUT_FILE.replace('.xlsx', '-cloudinary.xlsx')
+df.to_excel(OUTPUT_FILE, index=False)
+
+print(f'\n=== Готово ===')
+print(f'Загружено:  {stats["uploaded"]}')
+print(f'Уже были:   {stats["existed"]}')
+print(f'Ошибок:     {stats["errors"]}')
+print(f'\n✓ Файл сохранён: {OUTPUT_FILE}')
+print('Скачайте его через панель файлов слева (правой кнопкой → Download)')
+
+
+═══ ПОСЛЕ ЗАПУСКА ════════════════════════════════════════════════
+
+1. В Cloudinary будет структура:
+     mebrid/
+     ├── 5785/
+     │   ├── 01.jpg
+     │   ├── 02.jpg
+     │   └── ...
+     ├── 11469/
+     ├── 461420/
+     └── ...
+
+2. Скачайте products-all-cloudinary.xlsx — пришлите разработчику.
+
+3. Обязательно отзовите эти API-ключи в Cloudinary:
+     Settings → Security → Access Keys → Disable
+   и сгенерируйте новые.

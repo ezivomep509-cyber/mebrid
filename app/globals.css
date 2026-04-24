@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-cream text-ink;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition;
+  }
+  .btn-primary {
+    @apply btn bg-sage-700 text-white hover:bg-sage-900;
+  }
+  .btn-outline {
+    @apply btn border border-ink/15 bg-white hover:border-ink/40;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-ink/10 bg-white px-3 py-1 text-xs font-medium text-ink/70;
+  }
+  .input {
+    @apply w-full rounded-full border border-ink/15 bg-white px-4 py-2 text-sm placeholder:text-ink/40 focus:border-sage-700 focus:outline-none;
+  }
+
+  /* Стили для текстовых юр.страниц */
+  .legal-prose {
+    @apply text-ink/80 leading-relaxed;
+  }
+  .legal-prose h2 {
+    @apply mb-3 mt-8 font-display text-xl font-semibold text-ink;
+  }
+  .legal-prose h3 {
+    @apply mb-2 mt-6 text-base font-semibold text-ink;
+  }
+  .legal-prose p {
+    @apply mb-4;
+  }
+  .legal-prose ul {
+    @apply mb-4 ml-5 list-disc space-y-1;
+  }
+  .legal-prose ol {
+    @apply mb-4 ml-5 list-decimal space-y-1;
+  }
+  .legal-prose a {
+    @apply text-sage-700 underline hover:text-sage-900;
+  }
+}
