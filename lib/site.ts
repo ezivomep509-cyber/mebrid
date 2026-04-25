@@ -9,8 +9,8 @@ export const site = {
   tagline: 'Мебель из искусственного ротанга от производителя',
   description:
     'Мебель из искусственного ротанга, алюминия и для сада от производителя. Работаем с 2016 года. Доставка по России.',
-  domain: 'mebrid.ru',
-  url: 'https://mebrid.ru',
+  domain: 'мебрид.рф',
+  url: 'https://xn--90agbnr0a.xn--p1ai',
   yearFounded: 2016,
 } as const;
 
