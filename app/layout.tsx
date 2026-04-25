@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     type: 'website',
   },
   robots: { index: true, follow: true },
+  verification: {
+    yandex: '1789b9a8231642fd',
+  },
 };
 
 // JSON-LD для Яндекса/Google: организация + локальный бизнес
