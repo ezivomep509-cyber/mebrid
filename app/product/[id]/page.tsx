@@ -13,7 +13,7 @@ export function generateMetadata({ params }: { params: { id: string } }) {
   const p = getProductById(params.id);
   if (!p) return { title: 'Товар не найден' };
   return {
-    title: `${p.name} — ${p.brand} | Garden Atelier`,
+    title: p.name,
     description: p.description.slice(0, 160),
   };
 }
@@ -49,7 +49,6 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         {/* Правая колонка */}
         <div>
           <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
-            <span className="chip">{product.brand}</span>
             <span className="chip">{product.category}</span>
             {product.stock.in_stock ? (
               <span className="chip bg-sage-50 text-sage-700">● {product.stock.label}</span>
@@ -108,15 +107,6 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                   </div>
                 ))}
               </dl>
-            </div>
-          )}
-
-          {product.url && (
-            <div className="mt-6 text-xs text-ink/50">
-              Источник:{' '}
-              <a href={product.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-ink">
-                {new URL(product.url).hostname}
-              </a>
             </div>
           )}
         </div>

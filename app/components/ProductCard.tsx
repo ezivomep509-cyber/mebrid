@@ -36,9 +36,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </Link>
 
       <div className="flex flex-1 flex-col p-4">
-        <div className="mb-1 flex items-center gap-2 text-xs text-ink/50">
-          <span>{product.brand}</span>
-          <span>·</span>
+        <div className="mb-1 text-xs text-ink/50">
           <span className="truncate">{product.category}</span>
         </div>
 

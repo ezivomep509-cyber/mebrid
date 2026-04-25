@@ -73,25 +73,6 @@ export default function Filters({ brands, categories, priceMin, priceMax, counts
         )}
       </div>
 
-      {/* Бренд */}
-      <div>
-        <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink/50">Бренд</div>
-        <div className="space-y-1.5">
-          {brands.map((b) => (
-            <label key={b} className="flex cursor-pointer items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={selectedBrands.includes(b)}
-                onChange={() => toggle('brand', b)}
-                className="h-4 w-4 rounded border-ink/20 text-sage-700 focus:ring-sage-700"
-              />
-              <span className="flex-1">{b}</span>
-              <span className="text-xs text-ink/40">{counts.byBrand[b] ?? 0}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
       {/* Категория */}
       <div>
         <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink/50">Категория</div>

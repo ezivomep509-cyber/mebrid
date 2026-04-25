@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import CatalogView from './CatalogView';
 
 export const metadata = {
-  title: 'Каталог — Garden Atelier',
+  title: 'Каталог',
 };
 
 export default function CatalogPage() {

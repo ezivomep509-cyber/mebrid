@@ -76,7 +76,6 @@ export default function CartPage() {
               </Link>
 
               <div className="flex flex-1 flex-col">
-                <div className="text-xs text-ink/50">{item.brand}</div>
                 <Link href={`/product/${item.id}`} className="font-medium hover:underline">
                   {item.name}
                 </Link>

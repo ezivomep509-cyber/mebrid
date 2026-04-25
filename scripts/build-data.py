@@ -98,16 +98,18 @@ def slugify(text):
 all_products = []
 
 def build_product(row, brand: str, brand_slug: str):
-    """Из строки датафрейма собирает dict продукта."""
+    """Из строки датафрейма собирает dict продукта.
+    Поля brand и url очищаются — поставщики и источники не должны
+    светиться нигде на сайте, в HTML или JSON."""
     photos = parse_photos(row.get("Фото"))
     return {
         "id": f"{brand_slug}-{row['ID']}",
         "source_id": int(row["ID"]),
-        "brand": brand,
-        "brand_slug": brand_slug,
+        "brand": "",            # скрыто
+        "brand_slug": brand_slug,  # используется только для формирования id
         "category": str(row["Категория"]).strip() if pd.notna(row["Категория"]) else "",
         "name": str(row["Название"]).strip(),
-        "url": str(row["URL"]).strip() if pd.notna(row.get("URL")) else "",
+        "url": "",              # скрыто
         "price": float(row["Цена"]) if pd.notna(row["Цена"]) else 0,
         "old_price": float(row["Старая цена (опционально)"]) if pd.notna(row.get("Старая цена (опционально)")) else None,
         "currency": str(row["Валюта"]).strip() if pd.notna(row.get("Валюта")) else "RUB",

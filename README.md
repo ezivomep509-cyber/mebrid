@@ -1,6 +1,6 @@
 # 🪑 Мебрид — интернет-каталог
 
-Сайт производителя мебели из искусственного ротанга — **mebrid.ru**.
+Сайт производителя мебели из искусственного ротанга — **mebrid.рф**.
 Next.js 14 (App Router) + Tailwind, статический сайт (SSG), деплой на Vercel.
 
 ## Что уже есть
@@ -96,7 +96,7 @@ git push -u origin main
 ```
 
 Далее [vercel.com/new](https://vercel.com/new) → Import → Deploy.
-Домен `mebrid.ru` в Vercel: Project → Settings → Domains → Add.
+Домен `mebrid.рф` в Vercel: Project → Settings → Domains → Add.
 
 ## Миграция фото в Cloudinary
 

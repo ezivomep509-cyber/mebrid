@@ -31,11 +31,9 @@ export default function CatalogView() {
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.category.toLowerCase().includes(q) ||
-          p.brand.toLowerCase().includes(q) ||
           p.description.toLowerCase().includes(q)
       );
     }
-    if (selectedBrands.length) res = res.filter((p) => selectedBrands.includes(p.brand));
     if (selectedCategories.length) res = res.filter((p) => selectedCategories.includes(p.category));
     if (inStockOnly) res = res.filter((p) => p.stock.in_stock);
     if (minP !== null) res = res.filter((p) => p.price >= minP);
