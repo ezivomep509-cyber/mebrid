@@ -40,27 +40,12 @@ def detect_brand(product_id: int) -> tuple[str, str]:
     return ("Dajar", "dajar")
 
 def parse_photos(raw):
-    """Разделяем по \n, убираем дубли (оригинал + -300x225 thumbnail)."""
+    """Разбираем колонку 'Фото' на список URL. Сохраняем порядок строго по Excel."""
     if not isinstance(raw, str):
         return []
     urls = [u.strip() for u in raw.split("\n") if u.strip()]
-    # Удаляем thumbnail'ы, если есть полноразмерная версия
-    full = set()
-    thumbs = {}
-    for u in urls:
-        # типичные паттерны: -300x225, -150x150, _thumbnail_1024
-        base = re.sub(r"-\d+x\d+(?=\.(jpe?g|png|webp))", "", u, flags=re.I)
-        base = re.sub(r"_thumbnail_\d+(?=\.(jpe?g|png|webp))", "", base, flags=re.I)
-        if base == u:
-            full.add(u)
-        else:
-            thumbs.setdefault(base, u)
-    result = list(full)
-    for base, thumb in thumbs.items():
-        if base not in full:
-            result.append(thumb)
-    # Возвращаем первые 10 — больше в галерее не нужно
-    return result[:10]
+    # Возвращаем первые 10 в исходном порядке — без всякой перетасовки.
+    return urls[:10]
 
 def parse_specs(raw):
     """Парсим характеристики вида 'Ключ: значение' построчно."""
@@ -103,10 +88,10 @@ def build_product(row, brand: str, brand_slug: str):
     светиться нигде на сайте, в HTML или JSON."""
     photos = parse_photos(row.get("Фото"))
     return {
-        "id": f"{brand_slug}-{row['ID']}",
+        "id": f"p{row['ID']}",
         "source_id": int(row["ID"]),
         "brand": "",            # скрыто
-        "brand_slug": brand_slug,  # используется только для формирования id
+        "brand_slug": "",       # скрыто, больше не используется в id
         "category": str(row["Категория"]).strip() if pd.notna(row["Категория"]) else "",
         "name": str(row["Название"]).strip(),
         "url": "",              # скрыто
