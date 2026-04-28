@@ -5,6 +5,7 @@ import { CartProvider } from '@/lib/cart';
 import { site, contacts, company } from '@/lib/site';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ContactWidget from './components/ContactWidget';
 
 const YANDEX_METRIKA_ID = 108758652;
 
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
+          <ContactWidget />
         </CartProvider>
 
         {/* Yandex.Metrika counter */}
