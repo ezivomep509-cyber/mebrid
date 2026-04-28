@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useCart, formatOrderMessage } from '@/lib/cart';
 import { formatPrice } from '@/lib/products';
-import { social, contacts } from '@/lib/site';
+import { social } from '@/lib/site';
 
 export default function CartPage() {
   const { items, remove, setQty, clear, totalAmount, totalQty, ready } = useCart();
@@ -123,9 +123,6 @@ export default function CartPage() {
             <button onClick={handleCheckout} className="btn-primary w-full">
               Оформить через ВКонтакте
             </button>
-            <a href={`tel:${contacts.phoneTel}`} className="btn-outline w-full text-sm">
-              Позвонить · {contacts.phone}
-            </a>
           </div>
 
           <p className="text-xs text-ink/50">
@@ -183,10 +180,6 @@ export default function CartPage() {
                 Закрыть
               </button>
             </div>
-
-            <p className="mt-4 text-center text-xs text-ink/40">
-              Или позвоните: <a href={`tel:${contacts.phoneTel}`} className="underline">{contacts.phone}</a>
-            </p>
           </div>
         </div>
       )}
